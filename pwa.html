@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PWA Shop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+    .product { display: flex; justify-content: space-between; margin: 1rem 0; }
+    button { padding: 8px 12px; background: #28a745; color: white; border: none; border-radius: 5px; }
+    @media (max-width: 600px) {
+      .product { flex-direction: column; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🛒 PWA Shop</h2>
+    <div class="product">
+      <span>📱 Smartphone</span>
+      <button>Add to Cart</button>
+    </div>
+    <div class="product">
+      <span>🎧 Headphones</span>
+      <button>Add to Cart</button>
+    </div>
+    <div class="product">
+      <span>⌚ Smartwatch</span>
+      <button>Add to Cart</button>
+    </div>
+    <p>Status: <span id="status">Online</span></p>
+  </div>
+
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('✅ Service Worker Registered'));
+    }
+
+    // Connection status
+    window.addEventListener('offline', () => {
+      document.getElementById('status').textContent = 'Offline';
+    });
+    window.addEventListener('online', () => {
+      document.getElementById('status').textContent = 'Online';
+    });
+  </script>
+
+  <!-- Service Worker inline for simplicity -->
+  <script>
+    const swScript = `
+      const cacheName = 'pwa-shop-v1';
+      const assets = ['/', '/index.html'];
+
+      self.addEventListener('install', event => {
+        event.waitUntil(
+          caches.open(cacheName).then(cache => cache.addAll(assets))
+        );
+      });
+
+      self.addEventListener('fetch', event => {
+        event.respondWith(
+          caches.match(event.request).then(res => res || fetch(event.request))
+        );
+      });
+
+      self.addEventListener('push', event => {
+        const data = event.data?.text() || 'New promo!';
+        event.waitUntil(
+          self.registration.showNotification('PWA Shop', {
+            body: data,
+            icon: 'https://cdn-icons-png.flaticon.com/512/1170/1170576.png'
+          })
+        );
+      });
+    `;
+
+    // Save inline sw.js via Blob
+    const blob = new Blob([swScript], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl);
+  </script>
+</body>
+</html>
