@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Learning Platform</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f6f8;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #333;
+    }
+    video {
+      width: 100%;
+      border-radius: 6px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    p {
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎓 Online Learning Platform</h1>
+
+    <h2>📺 Video Lesson</h2>
+    <video id="lessonVideo" controls>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Your browser does not support video.
+    </video>
+    <p id="videoStatus">Video Status: ❌ Not Completed</p>
+
+    <h2>📝 Quiz</h2>
+    <p>Q: What is 3 + 4?</p>
+    <button onclick="checkAnswer(6)">6</button>
+    <button onclick="checkAnswer(7)">7</button>
+    <button onclick="checkAnswer(8)">8</button>
+    <p id="quizStatus">Quiz Status: ❌ Not Attempted</p>
+
+    <h2>📊 Progress</h2>
+    <p id="progressStatus">Video: ❌ | Quiz: ❌</p>
+  </div>
+
+  <script>
+    let videoCompleted = false;
+    let quizCompleted = false;
+
+    document.getElementById("lessonVideo").addEventListener("ended", () => {
+      videoCompleted = true;
+      document.getElementById("videoStatus").textContent = "Video Status: ✅ Completed";
+      updateProgress();
+    });
+
+    function checkAnswer(answer) {
+      if (answer === 7) {
+        document.getElementById("quizStatus").textContent = "Quiz Status: ✅ Correct";
+        quizCompleted = true;
+      } else {
+        document.getElementById("quizStatus").textContent = "Quiz Status: ❌ Incorrect";
+        quizCompleted = false;
+      }
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const video = videoCompleted ? "✅" : "❌";
+      const quiz = quizCompleted ? "✅" : "❌";
+      document.getElementById("progressStatus").textContent = Video: ${video} | Quiz: ${quiz};
+    }
+  </script>
+</body>
+</html>
