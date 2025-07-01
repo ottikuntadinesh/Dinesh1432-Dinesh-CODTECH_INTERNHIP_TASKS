@@ -1,0 +1,33 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Real-Time Collaborative Editor</title>
+      <style>
+        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+        textarea { width: 100%; height: 400px; font-size: 16px; }
+        h1 { color: #333; }
+      </style>
+    </head>
+    <body>
+      <h1>📝 Collaborative Editor</h1>
+      <textarea id="editor"></textarea>
+
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        const socket = io();
+        const textarea = document.getElementById('editor');
+
+        socket.on('load-document', (content) => {
+          textarea.value = content;
+        });
+
+        textarea.addEventListener('input', () => {
+          socket.emit('edit-document', textarea.value);
+        });
+
+        socket.on('document-updated', (content) => {
+          textarea.value = content;
+        });
+      </script>
+    </body>
+  
